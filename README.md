@@ -10,6 +10,19 @@ This library is used in ElasticSearch integration to OrleansMetropole projects.
 
 Example integration typo3 Command
 --------------------
+
+First create OmEk Service with config
+
+```yaml
+  # todo #8 How to pass configuration from settings.php to argument @fredewill
+  OrleansMetropole\ElasticSearch\Client\Client:
+    arguments:
+      $config:
+        host: 'https://orleans-metropole.ent.westeurope.azure.elastic-cloud.com'
+        app-search:
+          token: 'private-kr7rcwcq29iw1btyrb5jfkem'
+```
+
 ```php
   use OrleansMetropole\ElasticSearch\Client\Client;
   public function __construct(
