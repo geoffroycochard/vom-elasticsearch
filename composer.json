@@ -1,0 +1,22 @@
+{
+    "name": "orleans-metropole/elasticsearch",
+    "description": "Used to minterface Orleans Métropole Electic Search configuration",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OrleansMetropole\\ElasticSearch\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Geoffroy Cochard",
+            "email": "geoffroy.cochard@orleans-metropole.fr"
+        }
+    ],
+    "require": {
+		"elastic/enterprise-search": "^8.9",
+		"orleans-metropole/metadata": "@dev",
+		"symfony/validator": "^6.3"
+    }
+}
