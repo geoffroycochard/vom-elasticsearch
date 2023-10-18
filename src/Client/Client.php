@@ -6,6 +6,7 @@ namespace OrleansMetropole\ElasticSearch\Client;
 use Symfony\Component\Validator\Validation;
 use Elastic\EnterpriseSearch\AppSearch\Request;
 use Elastic\EnterpriseSearch\Response\Response;
+use Elastic\EnterpriseSearch\AppSearch\Schema;
 
 final class Client extends \Elastic\EnterpriseSearch\Client
 {
@@ -47,6 +48,25 @@ final class Client extends \Elastic\EnterpriseSearch\Client
         return $appSearch->indexDocuments(
             new Request\IndexDocuments($this->engineName, $documents)
         );
+	}
+
+	public function search($keyword, $fields = ['title', 'summary'])
+	{
+		$search = new Schema\SearchRequestParams($keyword);
+
+		// Result fields
+		$result_fields = new Schema\SimpleObject();
+		foreach ($fields as $field) {
+			$result_fields->{$field} = [
+				'raw' => new Schema\SimpleObject()
+			];
+		}
+
+		$search->result_fields = $result_fields;
+
+		return $this->appSearch()->search(
+			new Request\Search($this->engineName, $search)
+		);
 	}
 
 	public function listDocuments(): Response
