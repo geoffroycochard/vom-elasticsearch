@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace OrleansMetropole\ElasticSearch\Model;
 
+use DateTimeImmutable;
 use JsonSerializable;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -80,6 +81,18 @@ class Document implements DocumentInterface, JsonSerializable
      */
     private ?array $date;
 
+	/**
+	 * Summary of createdAt
+	 * @var DateTimeImmutable
+	 */
+	private DateTimeImmutable $createdAt;
+
+ /**
+  * Summary of updatedAt
+  * @var DateTimeImmutable
+  */
+	private DateTimeImmutable $updatedAt;
+
     /**
      * Summary of image
      * @var string
@@ -118,6 +131,33 @@ class Document implements DocumentInterface, JsonSerializable
 	{
 		$this->id = $id;
 	}
+
+    public function jsonSerialize(): mixed {
+        // todo #10 return only filled properties @geoffroycochard
+		$vars = get_object_vars($this);
+
+		$return = [];
+		foreach ($vars as $key => $value) {
+			// Have to format key [Fields can only contain lowercase letters, numbers, and underscores]
+			$key = strtolower(preg_replace('/\B([A-Z])/', '_$1', $key));
+			// Value DateTime
+			if($value instanceof DateTimeImmutable) {
+				$value = $value->setTimezone(new \DateTimeZone('Europe/Paris'))->format('c');
+			}
+			$return[$key] = $value;
+		}
+
+		return $return;
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        $metadata->addPropertyConstraint('id', new Assert\NotBlank());
+        $metadata->addPropertyConstraint(
+            'title',
+            new Assert\NotBlank()
+        );
+    }
 
 	/**
 	 * Summary of id
@@ -379,19 +419,38 @@ class Document implements DocumentInterface, JsonSerializable
 		return $this;
 	}
 
-    public function jsonSerialize(): mixed {
-        // todo #10 return only filled properties @geoffroycochard
-        return get_object_vars($this);
-    }
+	/**
+	 * Summary of createdAt
+	 * @return DateTimeImmutable
+	 */
+	public function getCreatedAt(): DateTimeImmutable {
+		return $this->createdAt;
+	}
+	
+	/**
+	 * Summary of createdAt
+	 * @param DateTimeImmutable $createdAt Summary of createdAt
+	 * @return self
+	 */
+	public function setCreatedAt(DateTimeImmutable $createdAt): self {
+		$this->createdAt = $createdAt;
+		return $this;
+	}
 
-    public static function loadValidatorMetadata(ClassMetadata $metadata): void
-    {
-        $metadata->addPropertyConstraint('id', new Assert\NotBlank());
-        $metadata->addPropertyConstraint(
-            'title',
-            new Assert\NotBlank()
-        );
-    }
-
+	/**
+	 * @return DateTimeImmutable
+	 */
+	public function getUpdatedAt(): DateTimeImmutable {
+		return $this->updatedAt;
+	}
+	
+	/**
+	 * @param DateTimeImmutable $updatedAt 
+	 * @return self
+	 */
+	public function setUpdatedAt(DateTimeImmutable $updatedAt): self {
+		$this->updatedAt = $updatedAt;
+		return $this;
+	}
 }
 

@@ -48,5 +48,19 @@ final class Client extends \Elastic\EnterpriseSearch\Client
             new Request\IndexDocuments($this->engineName, $documents)
         );
 	}
+
+	public function listDocuments(): Response
+	{
+        return $this->appSearch()->listDocuments(
+            new Request\ListDocuments($this->engineName)
+        );
+	}
+
+	public function deleteDocuments(array $ids): Response
+	{
+        return $this->appSearch()->deleteDocuments(
+			new Request\DeleteDocuments($this->engineName, $ids)
+		);
+	}
 }
 
