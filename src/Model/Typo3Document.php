@@ -14,7 +14,7 @@ final class Typo3Document extends Document
      */
     public function __construct(string $id, string $type)
     {
-        $id = sprintf('%s_%s_%s', $this->prefixId, $type, $id);
+        $id = sprintf('%s-%s-%s', $this->prefixId, $type, $id);
         parent::__construct($id);
     }
 }
