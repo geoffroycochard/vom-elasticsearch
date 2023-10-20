@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OrleansMetropole\ElasticSearch\Model;
 
-final class Typo3Document extends Document
+final class DrupalDocument extends Document
 {
     private string $prefixId = 'drupal';
 
