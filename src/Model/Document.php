@@ -27,6 +27,12 @@ class Document implements DocumentInterface, JsonSerializable
     private string $type;
 
     /**
+     * Summary of type
+     * @var string
+     */
+    private string $source;
+
+    /**
      * Summary of theme
      * Mise en relation avec des thèmes abordés (mobilité, enfance, sports, loisirs) 
      * utiles pour recouper je pense passer en tags avec thesorus avec des constantes 
@@ -79,7 +85,7 @@ class Document implements DocumentInterface, JsonSerializable
      * Summary of date
      * @var array
      */
-    private ?array $date;
+    private ?array $dateEvent;
 
 	/**
 	 * Summary of createdAt
@@ -152,9 +158,20 @@ class Document implements DocumentInterface, JsonSerializable
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
-        $metadata->addPropertyConstraint('id', new Assert\NotBlank());
+        $metadata->addPropertyConstraint(
+			'id', 
+			new Assert\NotBlank()
+		);
         $metadata->addPropertyConstraint(
             'title',
+            new Assert\NotBlank()
+        );
+        $metadata->addPropertyConstraint(
+            'type',
+            new Assert\NotBlank()
+        );
+        $metadata->addPropertyConstraint(
+            'source',
             new Assert\NotBlank()
         );
     }
@@ -182,6 +199,24 @@ class Document implements DocumentInterface, JsonSerializable
 	 */
 	public function setType(string $type): self {
 		$this->type = $type;
+		return $this;
+	}
+
+	/**
+	 * Summary of type
+	 * @return string
+	 */
+	public function getSource(): string {
+		return $this->source;
+	}
+	
+	/**
+	 * Summary of type
+	 * @param string $source Summary of type
+	 * @return self
+	 */
+	public function setSource(string $source): self {
+		$this->source = $source;
 		return $this;
 	}
 
@@ -315,8 +350,8 @@ class Document implements DocumentInterface, JsonSerializable
 	 * Summary of date
 	 * @return 
 	 */
-	public function getDate(): ?array {
-		return $this->date;
+	public function getDateEvent(): ?array {
+		return $this->dateEvent;
 	}
 	
 	/**
@@ -324,8 +359,8 @@ class Document implements DocumentInterface, JsonSerializable
 	 * @param  $date Summary of date
 	 * @return self
 	 */
-	public function setDate(?array $date): self {
-		$this->date = $date;
+	public function setDateEvent(?array $date): self {
+		$this->dateEvent = $date;
 		return $this;
 	}
 
