@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace OrleansMetropole\ElasticSearch\Client;
 
+use Elastic\EnterpriseSearch\AppSearch\Schema\PaginationResponseObject;
 use Symfony\Component\Validator\Validation;
 use Elastic\EnterpriseSearch\AppSearch\Request;
 use Elastic\EnterpriseSearch\Response\Response;
@@ -50,7 +51,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
         );
 	}
 
-	public function search($keyword, $fields = ['title', 'summary'])
+	public function search($keyword, $current = 1, $size = 10, $fields = ['title', 'summary'])
 	{
 		$search = new Schema\SearchRequestParams($keyword);
 
@@ -61,6 +62,12 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 				'raw' => new Schema\SimpleObject()
 			];
 		}
+
+		// Paginate
+		$pagination = new PaginationResponseObject();
+		$pagination->size = $size;
+		$pagination->current = $current;
+		$search->page = $pagination;
 
 		$search->result_fields = $result_fields;
 
