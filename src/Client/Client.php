@@ -51,7 +51,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
         );
 	}
 
-	public function search($keyword, $current = 1, $size = 10, $fields = ['title', 'summary'])
+	public function search($keyword, $current = 1, $size = 10, $fields = ['title', 'summary'], $site = false)
 	{
 		$search = new Schema\SearchRequestParams($keyword);
 
@@ -62,6 +62,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 				'raw' => new Schema\SimpleObject()
 			];
 		}
+		$search->result_fields = $result_fields;
 
 		// Paginate
 		$pagination = new PaginationResponseObject();
@@ -69,7 +70,12 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 		$pagination->current = $current;
 		$search->page = $pagination;
 
-		$search->result_fields = $result_fields;
+		// filter
+		if ($site) {
+			$filter = new Schema\SimpleObject();
+			$filter->origin = $site;
+			$search->filters = $filter;
+		}
 
 		return $this->appSearch()->search(
 			new Request\Search($this->engineName, $search)
