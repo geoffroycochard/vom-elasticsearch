@@ -20,6 +20,12 @@ class Document implements DocumentInterface, JsonSerializable
      */
     private string $id;
 
+	/**
+	 * Summary of toDelete
+	 * @var bool
+	 */
+	private bool $toDelete = false;
+
     /**
      * Summary of type
      * @var string
@@ -485,6 +491,24 @@ class Document implements DocumentInterface, JsonSerializable
 	 */
 	public function setUpdatedAt(DateTimeImmutable $updatedAt): self {
 		$this->updatedAt = $updatedAt;
+		return $this;
+	}
+
+	/**
+	 * Summary of toDelete
+	 * @return bool
+	 */
+	public function toDelete(): bool {
+		return $this->toDelete;
+	}
+	
+	/**
+	 * Summary of toDelete
+	 * @param bool $toDelete Summary of toDelete
+	 * @return self
+	 */
+	public function setToDelete(bool $toDelete): self {
+		$this->toDelete = $toDelete;
 		return $this;
 	}
 }

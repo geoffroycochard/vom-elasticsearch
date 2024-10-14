@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace OrleansMetropole\ElasticSearch\Client;
 
 use Elastic\EnterpriseSearch\AppSearch\Schema\PaginationResponseObject;
+use OrleansMetropole\ElasticSearch\Model\Document;
 use Symfony\Component\Validator\Validation;
 use Elastic\EnterpriseSearch\AppSearch\Request;
 use Elastic\EnterpriseSearch\Response\Response;
@@ -36,18 +37,70 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 			->addMethodMapping('loadValidatorMetadata')
 			->getValidator()
 		;
+
+		$documentsToIndex = [];
+		$documentsToDelete = [];
 			
 		foreach ($documents as $document) {
-			$errors = $validator->validate($document);
-			if (count($errors) > 0) {
-				throw new \Exception($errors->__toString());
-				
+			if ($document->toDelete()) {
+				$documentsToDelete[] = $document->getId();
+			} else {
+				$errors = $validator->validate($document);
+				if (count($errors) > 0) {
+					throw new \Exception($errors->__toString());
+				}
+				$documentsToIndex[] = $document;
 			}
 		}
 
-        $appSearch = $this->appSearch();
-        return $appSearch->indexDocuments(
-            new Request\IndexDocuments($this->engineName, $documents)
+		if (count($documentsToDelete) > 0) {
+			$return[] = $this->appSearch()->deleteDocuments(
+				new Request\DeleteDocuments($this->engineName, $documentsToDelete)
+			);
+		}
+
+		if (count($documentsToIndex) > 0) {
+			$return[] = $this->appSearch()->indexDocuments(
+				new Request\IndexDocuments($this->engineName, $documentsToIndex)
+			);
+		}
+
+		$mergedResponse = null;
+		
+		foreach ($return as $response) {
+			if ($response instanceof Response) {
+				if ($mergedResponse === null) {
+					$mergedResponse = $response;
+				} else {
+					$mergedResponseData = $mergedResponse->asArray();
+					$currentResponseData = $response->asArray();
+					
+					foreach ($currentResponseData as $key => $value) {
+						if (isset($mergedResponseData[$key]) && is_array($mergedResponseData[$key])) {
+							$mergedResponseData[$key] = array_merge($mergedResponseData[$key], $value);
+						} else {
+							$mergedResponseData[$key] = $value;
+						}
+					}
+					
+					$mergedResponse = new Response(
+						$response->getResponse()->withBody(
+							\GuzzleHttp\Psr7\Utils::streamFor(json_encode($mergedResponseData))
+						)
+					);
+				}
+			}
+		}
+		
+		return $mergedResponse ?? new Response(
+			new \GuzzleHttp\Psr7\Response(200, [], '{}')
+		);
+	}
+
+    public function deleteDocument(Document $document): Response
+    {
+        return $this->appSearch()->deleteDocuments(
+            new Request\DeleteDocuments($this->engineName, [$document->getId()])
         );
 	}
 
