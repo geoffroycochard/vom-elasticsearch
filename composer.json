@@ -16,6 +16,6 @@
     ],
     "require": {
 		"elastic/enterprise-search": "^8.9",
-		"symfony/validator": "^6.3"
+		"symfony/validator": "^4.4|^5.0|^6.0"
     }
 }
