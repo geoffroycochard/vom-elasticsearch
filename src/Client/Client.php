@@ -200,13 +200,13 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 						"match" => [
 							"type.enum" => [
 								"query" => "file", 
-								"boost" => 0.2
+								"boost" => 0.5
 							],
 						],
 					],
 					[
 						"range" => [
-							"created_at.date" => [
+							"updated_at.date" => [
 								"gte" => "now-3m/m",
 								"boost" => 20,
 							],
@@ -214,7 +214,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 					],
 					[
 						"range" => [
-							"created_at.date" => [
+							"updated_at.date" => [
 								"gte" => "now-1y/m",
 								"boost" => 10,
 							],
@@ -222,7 +222,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 					],
 					[
 						"range" => [
-							"created_at.date" => [
+							"updated_at.date" => [
 								"lte" => "now-2y/m",
 								"boost" => 0.3,
 							],
