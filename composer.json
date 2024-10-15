@@ -16,7 +16,6 @@
     ],
     "require": {
 		"elastic/enterprise-search": "^8.9",
-		"orleans-metropole/metadata": "@dev",
 		"symfony/validator": "^6.3"
     }
 }
