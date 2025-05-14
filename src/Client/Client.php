@@ -63,6 +63,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 			}
 		}
 
+		$return = [];
 		if (count($documentsToDelete) > 0) {
 			$return[] = $this->appSearch()->deleteDocuments(
 				new Request\DeleteDocuments($this->engineName, $documentsToDelete)
