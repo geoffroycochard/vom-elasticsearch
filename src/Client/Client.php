@@ -146,7 +146,14 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 		);
 	}
 
-	public function esSearch($keyword, $current = 1, $size = 10, $fields = ['title', 'summary'], $site = false)
+	public function esSearch(
+		$keyword, 
+		$current = 1, 
+		$size = 10, 
+		$fields = ["title", "summary", "target", "updated_at"], 
+		$site = false,
+		$type = null
+	)
 	{
 
 		$searchParams = new Schema\EsSearchParams();
@@ -156,6 +163,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 		$searchParams->fields = [
 			'title',
 			'summary',
+			'content',
 			'target',
 			'updated_at',
 			'created_at',
@@ -169,7 +177,7 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 					[
 						"multi_match" => [
 							"query" => $keyword,
-							"fields" => ["title", "summary", "target", "updated_at"],
+							"fields" => ["title", "summary", "content"],
 						],
 					],
 				],
