@@ -178,6 +178,8 @@ final class Client extends \Elastic\EnterpriseSearch\Client
 						"multi_match" => [
 							"query" => $keyword,
 							"fields" => ["title", "summary", "content"],
+							"type" => "most_fields",
+							"operator" => "and"
 						],
 					],
 				],
