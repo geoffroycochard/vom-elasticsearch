@@ -18,9 +18,9 @@ First create OmEk Service with config
   OrleansMetropole\ElasticSearch\Client\Client:
     arguments:
       $config:
-        host: 'https://orleans-metropole.ent.westeurope.azure.elastic-cloud.com'
+        host: 'https://***********.ent.westeurope.azure.elastic-cloud.com'
         app-search:
-          token: 'private-kr7rcwcq29iw1btyrb5jfkem'
+          token: 'private-***********'
 ```
 
 ```php
