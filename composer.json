@@ -1,6 +1,6 @@
 {
     "name": "orleans-metropole/elasticsearch",
-    "description": "Used to minterface Orleans Métropole Electic Search configuration",
+    "description": "Used to interface Orleans Métropole Elastic Search configuration",
     "type": "library",
     "license": "MIT",
     "autoload": {
